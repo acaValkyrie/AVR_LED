@@ -1,9 +1,11 @@
 # source
 TARGET = main
 SRCS = main.cpp
-HEDS = $(SRCS:.cpp=.h)
+SRCDIR = ./srcs
+SRCS_IN_DIR = $(addprefix $(SRCDIR)/, $(SRCS))
+HEDS_IN_DIR = $(addprefix $(SRCDIR)/, $(SRCS:.cpp=.h))
 OBJDIR = ./build
-OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
+# OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 
 # micro controller
 AVR_CHIP = attiny2313
@@ -17,8 +19,8 @@ CFLAGS = -Wall -Os -DF_CPU=$(F_CPU) -mmcu=$(AVR_CHIP)
 RM = rm
 
 # generate *.hex
-$(OBJDIR)/$(TARGET).hex: $(OBJDIR)/$(SRCS)
-	$(CC) $(CFLAGS) $(OBJDIR)/$(SRCS) -o $(OBJDIR)/$(TARGET)
+$(OBJDIR)/$(TARGET).hex: $(SRCS_IN_DIR)
+	$(CC) $(CFLAGS) $(SRCS_IN_DIR) -o $(OBJDIR)/$(TARGET)
 	avr-objcopy -F ihex $(OBJDIR)/$(TARGET) $(OBJDIR)/$(TARGET).hex
 
 # generate ./out/*.o
